@@ -73,13 +73,11 @@
         	// Boot game
         	game.state.start("Boot");
 
-          // todo get this to move player 2 paddle up and down
+          // init doppler code
           window.addEventListener('load', function() {
             window.doppler.init(function(bandwidth) {
               var threshold = 4;
               if (bandwidth.left > threshold || bandwidth.right > threshold) {
-                var diff = bandwidth.left - bandwidth.right;
-                // todo - make this apart of doppler obj
                 window.dopplerBandwidth = bandwidth;
               }
             });

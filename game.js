@@ -21,7 +21,7 @@ var theGame = function(game){
 	var dopplerEasingUpCount;
 	var dopplerEasingDownCount;
 	var dopplerPaddleDirection;
-}
+};
 
 theGame.prototype = {
   	create: function(){
@@ -157,8 +157,10 @@ theGame.prototype = {
 	    	    this.paddle1.body.y += this.paddleSpeed;
 	    	}
 
-				// lets make paddle one unbeatable
+				//////////// UNCOMMENT ME/////////////////
+				// COMPUTER CONTROLLED - set paddle to follow the balls vertical movement.
 				this.paddle1.body.y = this.ball.y;
+				////////////// DONT FORGET resetBall FUNCTION AT BOTTOM ////////////////////
 
 	    	// Move player 2 up and down
 	    	if (this.P2upKey.isDown)
@@ -170,45 +172,58 @@ theGame.prototype = {
 	    	    this.paddle2.body.y += this.paddleSpeed;
 	    	}
 
-				// move up with doppler
-				if(window.dopplerBandwidth.left > window.dopplerBandwidth.right)
-				{
-					//console.log('up')
-					if(this.dopplerPaddleDirection === 'down') {
-						this.dopplerEasingDownCount = 100;
-						this.dopplerPaddleDirection = 'up';
-						console.log('change');
-					}
+				//////////// First Option /////////////////
+			// basic up/down movement
+			// if(window.dopplerBandwidth.left > window.dopplerBandwidth.right)
+			// {
+			// 	this.paddle2.body.y -= window.dopplerBandwidth.left * 1.2;
+			// }
+			// else
+			// {
+			// 	this.paddle2.body.y += window.dopplerBandwidth.right * 1.2;
+			// }
 
-					if(this.dopplerEasingUpCount > 0) {
-						this.paddle2.body.y -= (window.dopplerBandwidth.left * 1.5) * (this.dopplerEasingUpCount / 100)
-					}
-					else {
-						this.paddle2.body.y = this.paddle2.body.y;
-					}
-
-					this.dopplerEasingUpCount--;
-
-					//console.log(this.dopplerEasingUpCount);
+			//////////// Second Option - simplish easing /////////////////
+			// move up with doppler
+			console.log(window.dopplerBandwidth);
+			if(window.dopplerBandwidth.left > window.dopplerBandwidth.right)
+			{
+				//console.log('up')
+				if(this.dopplerPaddleDirection === 'down') {
+					this.dopplerEasingDownCount = 100;
+					this.dopplerPaddleDirection = 'up';
+					console.log('change');
 				}
-				// move down with doppler
-				else if(window.dopplerBandwidth.right > window.dopplerBandwidth.left)
-				{
-					//console.log('down')
-					if(this.dopplerPaddleDirection === 'up') {
-						this.dopplerEasingUpCount = 100;
-						this.dopplerPaddleDirection = 'down';
-					}
 
-					if(this.dopplerEasingDownCount > 0) {
-						this.paddle2.body.y += (window.dopplerBandwidth.right * 1.5) * (this.dopplerEasingDownCount / 100);
-					}
-					else {
-						this.paddle2.body.y = this.paddle2.body.y;
-					}
-
-					this.dopplerEasingDownCount--;
+				if(this.dopplerEasingUpCount > 0) {
+					this.paddle2.body.y -= (window.dopplerBandwidth.left * 1.8) * (this.dopplerEasingUpCount / 100);
 				}
+				else {
+					this.paddle2.body.y = this.paddle2.body.y;
+				}
+
+				this.dopplerEasingUpCount--;
+
+				//console.log(this.dopplerEasingUpCount);
+			}
+			// move down with doppler
+			else if(window.dopplerBandwidth.right > window.dopplerBandwidth.left)
+			{
+				//console.log('down')
+				if(this.dopplerPaddleDirection === 'up') {
+					this.dopplerEasingUpCount = 100;
+					this.dopplerPaddleDirection = 'down';
+				}
+
+				if(this.dopplerEasingDownCount > 0) {
+					this.paddle2.body.y += (window.dopplerBandwidth.right * 1.8) * (this.dopplerEasingDownCount / 100);
+				}
+				else {
+					this.paddle2.body.y = this.paddle2.body.y;
+				}
+
+				this.dopplerEasingDownCount--;
+			}
 
 	    }
 
@@ -221,6 +236,7 @@ theGame.prototype = {
 		this.ball.body.velocity.y = 0;
 		this.ball.body.velocity.x = 0;
 
+		/////////////// UNCOMMENT /////////////////////
 		this.dopplerEasingUpCount = 100;
 		this.dopplerEasingDownCount = 100;
 
@@ -321,4 +337,4 @@ theGame.prototype = {
 
         }
 	}
-}
+};
