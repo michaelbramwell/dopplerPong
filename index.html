@@ -76,8 +76,11 @@
           // init doppler code
           window.addEventListener('load', function() {
             window.doppler.init(function(bandwidth) {
-              var threshold = 4;
-              if (bandwidth.left > threshold || bandwidth.right > threshold) {
+              var minThreshold = 4;
+              var maxThreshold = 8;
+
+              if ((bandwidth.left > minThreshold || bandwidth.right > minThreshold)
+                && (bandwidth.left < maxThreshold || bandwidth.right < maxThreshold)) {
                 window.dopplerBandwidth = bandwidth;
               }
             });

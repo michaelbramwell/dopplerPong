@@ -18,6 +18,8 @@ var theGame = function(game){
 
 	var playing;
 
+	/////////////// UNCOMMENT //////////////////
+	var dopplerEasingMaxCount;
 	var dopplerEasingUpCount;
 	var dopplerEasingDownCount;
 	var dopplerPaddleDirection;
@@ -31,9 +33,11 @@ theGame.prototype = {
 		this.p2Score = 0;
 		this.playing = false;
 
-		this.dopplerEasingUpCount = 100;
-		this.dopplerEasingDownCount = 100;
-		this.dopplerPaddleDirection = 'up'
+		/////////////// UNCOMMENT //////////////////
+		this.dopplerEasingMaxCount = 100;
+		this.dopplerEasingUpCount = this.dopplerEasingMaxCount;
+		this.dopplerEasingDownCount = this.dopplerEasingMaxCount;
+		this.dopplerPaddleDirection = 'up';
 
 		// add audio
 		this.beep = game.add.audio('beep');
@@ -157,10 +161,10 @@ theGame.prototype = {
 	    	    this.paddle1.body.y += this.paddleSpeed;
 	    	}
 
-				//////////// UNCOMMENT ME/////////////////
-				// COMPUTER CONTROLLED - set paddle to follow the balls vertical movement.
-				this.paddle1.body.y = this.ball.y;
-				////////////// DONT FORGET resetBall FUNCTION AT BOTTOM ////////////////////
+			//////////// UNCOMMENT ME/////////////////
+			// COMPUTER CONTROLLED - set paddle to follow the balls vertical movement.
+			this.paddle1.body.y = this.ball.y;
+			////////////// DONT FORGET resetBall FUNCTION AT BOTTOM ////////////////////
 
 	    	// Move player 2 up and down
 	    	if (this.P2upKey.isDown)
@@ -172,7 +176,7 @@ theGame.prototype = {
 	    	    this.paddle2.body.y += this.paddleSpeed;
 	    	}
 
-				//////////// First Option /////////////////
+			//////////// First Option /////////////////
 			// basic up/down movement
 			// if(window.dopplerBandwidth.left > window.dopplerBandwidth.right)
 			// {
@@ -185,18 +189,20 @@ theGame.prototype = {
 
 			//////////// Second Option - simplish easing /////////////////
 			// move up with doppler
+			console.log('==============Dopple Bandwidth Object==================');
 			console.log(window.dopplerBandwidth);
 			if(window.dopplerBandwidth.left > window.dopplerBandwidth.right)
 			{
-				//console.log('up')
+				console.log('up')
 				if(this.dopplerPaddleDirection === 'down') {
-					this.dopplerEasingDownCount = 100;
+					this.dopplerEasingDownCount = this.dopplerEasingMaxCount;
 					this.dopplerPaddleDirection = 'up';
 					console.log('change');
 				}
 
 				if(this.dopplerEasingUpCount > 0) {
-					this.paddle2.body.y -= (window.dopplerBandwidth.left * 1.8) * (this.dopplerEasingUpCount / 100);
+					// gradual slow down speed of paddle until stopped
+					this.paddle2.body.y -= (window.dopplerBandwidth.left * 2.5) * (this.dopplerEasingUpCount / 100);
 				}
 				else {
 					this.paddle2.body.y = this.paddle2.body.y;
@@ -204,25 +210,30 @@ theGame.prototype = {
 
 				this.dopplerEasingUpCount--;
 
-				//console.log(this.dopplerEasingUpCount);
+				console.log('==============Easing up count==================');
+				console.log(this.dopplerEasingUpCount);
 			}
 			// move down with doppler
 			else if(window.dopplerBandwidth.right > window.dopplerBandwidth.left)
 			{
-				//console.log('down')
+				console.log('down')
 				if(this.dopplerPaddleDirection === 'up') {
-					this.dopplerEasingUpCount = 100;
+					this.dopplerEasingUpCount = this.dopplerEasingMaxCount;
 					this.dopplerPaddleDirection = 'down';
 				}
 
 				if(this.dopplerEasingDownCount > 0) {
-					this.paddle2.body.y += (window.dopplerBandwidth.right * 1.8) * (this.dopplerEasingDownCount / 100);
+					// gradual slow down speed of paddle until stopped
+					this.paddle2.body.y += (window.dopplerBandwidth.right * 2.5) * (this.dopplerEasingDownCount / 100);
 				}
 				else {
 					this.paddle2.body.y = this.paddle2.body.y;
 				}
 
 				this.dopplerEasingDownCount--;
+
+				console.log('==============Easing up count==================');
+				console.log(this.dopplerEasingDownCount);
 			}
 
 	    }
@@ -237,8 +248,8 @@ theGame.prototype = {
 		this.ball.body.velocity.x = 0;
 
 		/////////////// UNCOMMENT /////////////////////
-		this.dopplerEasingUpCount = 100;
-		this.dopplerEasingDownCount = 100;
+		this.dopplerEasingUpCount = this.dopplerEasingMaxCount;
+		this.dopplerEasingDownCount = this.dopplerEasingMaxCount;
 
 		// Not playing anymore
 		this.playing = false;
@@ -276,7 +287,7 @@ theGame.prototype = {
 
 		this.particleBurst(_ball);
 
-		//this.beep.play();
+		this.beep.play();
 	},
 	ballLost: function(_ball)
 	{
@@ -299,7 +310,7 @@ theGame.prototype = {
 				this.p1ScoreText.setText(String(this.p1Score));
 	   	}
 
-			//this.point_sound.play();
+			this.point_sound.play();
 	   	this.resetBall();
 	},
 	particleBurst: function(pointer)
@@ -322,18 +333,23 @@ theGame.prototype = {
 
         	this.startGameText.visible = false;
 
-        	if(random >= 2)
-        	{
-        		//  Move to the ball
-	        	this.ball.body.velocity.x = -350;
-	        	this.playing = true;
-        	}
-        	if(random <= 2)
-        	{
-        		//  Move to the ball
-	        	this.ball.body.velocity.x = 350;
-	        	this.playing = true;
-        	}
+			/////////////// UNCOMMENT - make ball go left always /////////////////////
+			this.ball.body.velocity.x = -350;
+			this.playing = true;
+			/////////////// COMMENT OUT /////////////////////
+			
+//        	if(random >= 2)
+//        	{
+//        		//  Move to the ball
+//	        	this.ball.body.velocity.x = -350;
+//	        	this.playing = true;
+//        	}
+//        	if(random <= 2)
+//        	{
+//        		//  Move to the ball
+//	        	this.ball.body.velocity.x = 350;
+//	        	this.playing = true;
+//        	}
 
         }
 	}
